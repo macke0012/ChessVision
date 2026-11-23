@@ -46,8 +46,11 @@ def fix_mask(mask, threshold=80):
 
 
 def scale_approx(approx, orig_size):
-    sf = orig_size[0]/256.0
-    scaled = np.array(approx * sf, dtype=np.uint32)
+    # approx holds (x, y) points in the INPUT_SIZE mask; orig_size is (height, width).
+    # Scale each axis separately so non-square inputs map back correctly.
+    sy = orig_size[0] / float(INPUT_SIZE[1])
+    sx = orig_size[1] / float(INPUT_SIZE[0])
+    scaled = np.array(approx * np.array([sx, sy]), dtype=np.uint32)
     return scaled
 
 
