@@ -68,6 +68,16 @@ The performance of the current generation of square classifiers is promising; th
 
 <img src="./img/training_classification1.png" />
 
+#### Training data from screenshots
+
+`scripts/screenshots_to_squares.py` turns screenshots of digital boards (lichess, chess.com, ...) with a known FEN into labelled training squares. It finds the board from its square grid (no extraction model needed) and writes 64x64 greyscale squares into the same class folders as `data/squares/training`:
+
+```
+python scripts/screenshots_to_squares.py labels.csv -o data/new_squares --debug-dir data/new_squares_debug
+```
+
+`labels.csv` has the columns `file,fen,flip` (`flip` is `true` when the board is shown from Black's side). Check the grids in the debug folder, then move the squares into `data/squares/training` / `validation`. Keep the screenshots you test with out of the labels file.
+
 ## Install
 
 Prerequisites: MacOS or Linux with anaconda and conda installed
