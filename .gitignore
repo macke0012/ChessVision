@@ -3,6 +3,7 @@ cv_env_38/
 .vscode/
 *.hdf5
 *.pt
+!weights/*.pt
 *.log
 bucket/
 bucket*/
@@ -12,7 +13,8 @@ data/new_raw_resized/
 data/new_boards/
 data/new_squares/
 data/new_squares_debug/
-data/new_raw/
+data/new_raw/*
+!data/new_raw/screenshots/
 data/new_test/
 bucket_/
 ml/notebooks/reports/*.html
@@ -29,3 +31,6 @@ dist/
 macos/build/
 macos/ChessVisionOverlay/.build/
 .DS_Store
+sq_new/
+yolo_ds/
+yolo_runs/

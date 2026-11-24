@@ -78,6 +78,22 @@ python scripts/screenshots_to_squares.py labels.csv -o data/new_squares --debug-
 
 `labels.csv` has the columns `file,fen,flip` (`flip` is `true` when the board is shown from Black's side). Check the grids in the debug folder, then move the squares into `data/squares/training` / `validation`. Keep the screenshots you test with out of the labels file.
 
+#### Retraining the square classifier
+
+The screenshot classifier in `weights/` was made with the scripts in `scripts/training/` and the 200 captures in `data/new_raw/screenshots/` (100 chess.com analysis-board screenshots and 100 locally rendered lichess-style boards, each with its FEN):
+
+```
+python scripts/training/capture_chesscom.py data/new_raw/screenshots 100      # needs playwright + chromium
+python scripts/training/render_lichess.py data/new_raw/screenshots 100        # needs pymupdf
+python scripts/screenshots_to_squares.py data/new_raw/screenshots/train_chesscom.csv -o sq_new
+python scripts/screenshots_to_squares.py data/new_raw/screenshots/train_lichess.csv -o sq_new
+python scripts/training/build_yolo_dataset.py . sq_new yolo_ds
+python scripts/training/finetune_yolo_cls.py weights/yolo_classifier_3lc_base.pt yolo_ds yolo_runs
+python scripts/test_screenshots.py --weights yolo_runs/finetune/weights/last.pt
+```
+
+`train_*.csv` leave out the one capture whose position matches a test screenshot. Captures 90-99 of each site go to validation. See `weights/README.md` for the models and their scores.
+
 ## Live board
 
 `scripts/live_board.py` watches the screen, finds a digital chessboard (lichess, chess.com, ...) and shows the recognized position in a small always-on-top window that updates four times a second (`--interval` to change). Once the board is found, only that part of the screen is captured; the whole screen is searched again if the board moves or disappears. It uses the square classifier in `weights/yolo_classifier_screenshots.pt` (a YOLO classifier fine-tuned on lichess and chess.com screenshots).
