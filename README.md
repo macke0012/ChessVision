@@ -124,6 +124,8 @@ open "macos/build/ChessVision Overlay.app"
 
 On first launch, allow "ChessVision Overlay" under System Settings > Privacy & Security > Screen & System Audio Recording, then quit and reopen it. The ♞ menu has the toggles (Black at bottom, which annotations to show), a legend and Copy FEN. The API log is in `~/Library/Logs/ChessVisionOverlay/board_api.log`.
 
+There is no Windows version yet; [docs/windows-spec.md](docs/windows-spec.md) is a spec for building one that reuses the same board API.
+
 ### Live board options
 
 Tick "Black at bottom" (or press `f`) when the board is shown from Black's side. "Copy FEN" copies the position with White to move. On macOS, the app running Python (Terminal, iTerm, VS Code, ...) needs Screen Recording permission in System Settings > Privacy & Security. To test without the screen: `python scripts/live_board.py --image screenshots/start.png --once`.
