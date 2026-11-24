@@ -2,6 +2,7 @@ cv_env_38/
 **/__pycache__
 .vscode/
 *.hdf5
+*.pt
 *.log
 bucket/
 bucket*/
@@ -25,3 +26,6 @@ computeroot/user_uploads
 dist/
 *.egg-info
 .notes
+macos/build/
+macos/ChessVisionOverlay/.build/
+.DS_Store

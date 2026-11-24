@@ -78,6 +78,40 @@ python scripts/screenshots_to_squares.py labels.csv -o data/new_squares --debug-
 
 `labels.csv` has the columns `file,fen,flip` (`flip` is `true` when the board is shown from Black's side). Check the grids in the debug folder, then move the squares into `data/squares/training` / `validation`. Keep the screenshots you test with out of the labels file.
 
+## Live board
+
+`scripts/live_board.py` watches the screen, finds a digital chessboard (lichess, chess.com, ...) and shows the recognized position in a small always-on-top window that updates four times a second (`--interval` to change). Once the board is found, only that part of the screen is captured; the whole screen is searched again if the board moves or disappears. It uses the square classifier in `weights/yolo_classifier_screenshots.pt` (a YOLO classifier fine-tuned on lichess and chess.com screenshots).
+
+```
+pip install -r requirements-live.txt
+python scripts/live_board.py
+```
+
+### Overlay app (macOS)
+
+`macos/ChessVisionOverlay` is a menu-bar app (Swift, macOS 14+) that draws over the board on screen:
+
+- the side to move, worked out from a check, the moves it sees being played (also when stepping back through a game), or the last-move highlight (or set in the menu),
+- when you hover over (or drag) a piece: every square it can move to, green if safe, yellow for an equal trade, red with the material lost for a blunder (exchange evaluation on the square plus pieces the move leaves hanging),
+- forced mates in 1 or 2 for the side to move (green arrow, M1/M2; the full line is in the menu),
+- mates the opponent threatens if it were their move (dashed red arrow),
+- pieces in danger (check, undefended, or attacked by a cheaper piece): red for the side to move, blue for opponent pieces you can win, with arrows from the attackers,
+- pinned pieces (purple, dashed line from the pinning piece to the king) and, optionally, attacked-but-defended pieces (orange).
+
+Using this during a live game is outside assistance, which chess.com and lichess forbid; use it for analysis, reviewing games and watching. It captures the screen 4 times a second with ScreenCaptureKit (leaving out its own overlay), and gets the position and analysis from `scripts/board_api.py`, which it starts itself.
+
+```
+python3.10 -m venv .venv && .venv/bin/pip install -r requirements-live.txt
+macos/build_app.sh
+open "macos/build/ChessVision Overlay.app"
+```
+
+On first launch, allow "ChessVision Overlay" under System Settings > Privacy & Security > Screen & System Audio Recording, then quit and reopen it. The ♞ menu has the toggles (Black at bottom, which annotations to show), a legend and Copy FEN. The API log is in `~/Library/Logs/ChessVisionOverlay/board_api.log`.
+
+### Live board options
+
+Tick "Black at bottom" (or press `f`) when the board is shown from Black's side. "Copy FEN" copies the position with White to move. On macOS, the app running Python (Terminal, iTerm, VS Code, ...) needs Screen Recording permission in System Settings > Privacy & Security. To test without the screen: `python scripts/live_board.py --image screenshots/start.png --once`.
+
 ## Install
 
 Prerequisites: MacOS or Linux with anaconda and conda installed

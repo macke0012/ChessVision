@@ -1,0 +1,9 @@
+# For scripts/live_board.py and scripts/screenshots_to_squares.py (no TensorFlow needed).
+# Tested with Python 3.10 on macOS (Apple Silicon). tkinter must be available
+# (Homebrew Python: brew install python-tk@3.10).
+mss>=10.2
+ultralytics>=8.4
+torch>=2.0
+opencv-python>=4.8
+chess>=1.11
+numpy>=1.24
